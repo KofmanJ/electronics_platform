@@ -38,6 +38,14 @@ class SupplierViewSet(ModelViewSet):
     #     elif self.action == 'destroy':
     #         self.permission_classes = [IsAuthenticated, IsOwner]
     #     return [permission() for permission in self.permission_classes]
+    def get_permissions(self):
+        if self.action == ['create', 'list', 'retrieve']:
+            self.permission_classes = [IsAuthenticated]
+        elif self.action in ['update', 'partial_update']:
+            self.permission_classes = [IsAuthenticated, IsModerator | IsOwner]
+        elif self.action == 'destroy':
+            self.permission_classes = [IsAuthenticated, IsOwner]
+        return [permission() for permission in self.permission_classes]
 
 
 
