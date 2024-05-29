@@ -4,25 +4,19 @@ from rest_framework.exceptions import ValidationError
 from electronics.models import Supplier
 from electronics.serializers.contacts import ContactsSerializers
 from electronics.serializers.product import ProductSerializers
-from electronics.validators import SupplierValidator, SupplierLevelValidator
+from electronics.validators import SupplierValidator
 
 
 class SupplierCreateSerializers(serializers.ModelSerializer):
     """ Класс сериализатора cоздания поставщика """
-    # network_level = serializers.SerializerMethodField()
-    #
-    # def get_network_level(self, obj):
-    #     if obj.supplier_name:
-    #         obj.network_level = obj.supplier_name.network_level + 1
-    #         return obj.network_level
-    #     else:
-    #         return 0
+
+    level = serializers.IntegerField(required=False)  # Делаем поле level необязательным
 
     class Meta:
         model = Supplier
-        fields = ['name', 'network_level', 'contact', 'product', 'supplier_name', 'debt',
+        fields = ['name', 'network_type', 'level', 'contact', 'product', 'supplier_name', 'debt',
                   'creation_time']
-        validators = [SupplierValidator(), SupplierLevelValidator()]
+        validators = [SupplierValidator()]
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -31,7 +25,9 @@ class SupplierCreateSerializers(serializers.ModelSerializer):
 
         if validated_data.get('supplier_name'):
             supplier_name = validated_data['supplier_name']
-            validated_data['network_level'] = supplier_name.network_level + 1
+            validated_data['level'] = supplier_name.level + 1
+        elif validated_data.get('network_type') == 0:
+            validated_data['level'] = 0
 
         return super().create(validated_data)
 
@@ -41,6 +37,7 @@ class SupplierSerializers(serializers.ModelSerializer):
 
     contact = ContactsSerializers()
     product = ProductSerializers()
+    network_type = serializers.CharField(source='get_network_type_display')
 
     class Meta:
         model = Supplier
