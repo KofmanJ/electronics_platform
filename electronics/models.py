@@ -18,6 +18,7 @@ class Contacts(models.Model):
     city = models.CharField(max_length=100, verbose_name='Город', **NULLABLE)
     street = models.CharField(max_length=150, verbose_name='Улица', **NULLABLE)
     house_number = models.CharField(max_length=100, verbose_name='Номер дома', **NULLABLE)
+    creation_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
 
     def __str__(self):
         return self.email
@@ -32,6 +33,7 @@ class Product(models.Model):
     product_model = models.CharField(max_length=100, verbose_name='Модель')
     release_date = models.DateField(verbose_name='Дата выхода', **NULLABLE)
     price = models.FloatField(verbose_name='Цена', **NULLABLE)
+    creation_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
 
     def __str__(self):
         return self.product_title
