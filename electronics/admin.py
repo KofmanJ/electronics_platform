@@ -17,7 +17,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Supplier)
 class SupplierAdmin(admin.ModelAdmin):
-    list_display = ('name', 'network_level', 'contact', 'product', 'supplier_name', 'debt', 'creation_time',
+    list_display = ('name', 'network_type', 'level', 'contact', 'product', 'supplier_name', 'debt', 'creation_time',
                     'creation_user')
     list_filter = ('contact__city', 'contact__country')
 
@@ -26,4 +26,5 @@ class SupplierAdmin(admin.ModelAdmin):
         if serializer.is_valid():
             obj.save()
         else:
-            raise ValidationError('У завода не может быть поставщика')
+            raise ValidationError('Ошибка согласованности полей. Проверьте поля "Уровень поставки", '
+                                  '"Тип сети" и "Поставщик"')
