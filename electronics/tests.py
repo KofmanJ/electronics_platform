@@ -8,7 +8,6 @@ from users.models import User
 class ContactTestCase(APITestCase):
 
     def setUp(self):
-
         self.user = User.objects.create(
             email='testtest@test.ru',
             password='testtest'
@@ -42,16 +41,22 @@ class ContactTestCase(APITestCase):
 
         self.assertEquals(
             response.json(),
-            [
-                {
-                    'id': self.contact.id,
-                    'email': self.contact.email,
-                    'country': self.contact.country,
-                    'city': self.contact.city,
-                    'street': self.contact.street,
-                    'house_number': self.contact.house_number,
-                }
-            ]
+            {
+                'count': 1,
+                'next': None,
+                'previous': None,
+                'results':
+                    [
+                        {
+                            'id': self.contact.id,
+                            'email': self.contact.email,
+                            'country': self.contact.country,
+                            'city': self.contact.city,
+                            'street': self.contact.street,
+                            'house_number': self.contact.house_number,
+                        }
+                    ]
+            }
         )
 
     def test_contact_retrieve(self):
@@ -72,16 +77,22 @@ class ContactTestCase(APITestCase):
 
         self.assertEquals(
             response.json(),
-            [
-                {
-                    'id': self.contact.id,
-                    'email': self.contact.email,
-                    'country': self.contact.country,
-                    'city': self.contact.city,
-                    'street': self.contact.street,
-                    'house_number': self.contact.house_number,
-                }
-            ]
+            {
+                'count': 1,
+                'next': None,
+                'previous': None,
+                'results':
+                    [
+                        {
+                            'id': self.contact.id,
+                            'email': self.contact.email,
+                            'country': self.contact.country,
+                            'city': self.contact.city,
+                            'street': self.contact.street,
+                            'house_number': self.contact.house_number,
+                        }
+                    ]
+            }
         )
 
     def test_contact_create(self):
@@ -104,7 +115,7 @@ class ContactTestCase(APITestCase):
         )
 
     def test_contact_update(self):
-        """Тестирование обновления пользователя"""
+        """Тестирование обновления контакта"""
 
         updated_data = {
             'city': 'Saint Petersburg',
@@ -138,7 +149,6 @@ class ContactTestCase(APITestCase):
 class ProductTestCase(APITestCase):
 
     def setUp(self):
-
         self.user = User.objects.create(
             email='testtest@test.ru',
             password='testtest'
@@ -169,15 +179,21 @@ class ProductTestCase(APITestCase):
 
         self.assertEquals(
             response.json(),
-            [
-                {
-                    'id': self.product.id,
-                    'product_title': self.product.product_title,
-                    'product_model': self.product.product_model,
-                    'release_date': self.product.release_date,
-                    'price': self.product.price
-                }
-            ]
+            {
+                'count': 1,
+                'next': None,
+                'previous': None,
+                'results':
+                    [
+                        {
+                            'id': self.product.id,
+                            'product_title': self.product.product_title,
+                            'product_model': self.product.product_model,
+                            'release_date': self.product.release_date,
+                            'price': self.product.price
+                        }
+                    ]
+            }
         )
 
     def test_product_retrieve(self):
@@ -196,15 +212,21 @@ class ProductTestCase(APITestCase):
 
         self.assertEquals(
             response.json(),
-            [
-                {
-                    'id': self.product.id,
-                    'product_title': self.product.product_title,
-                    'product_model': self.product.product_model,
-                    'release_date': self.product.release_date,
-                    'price': self.product.price
-                }
-            ]
+            {
+                'count': 1,
+                'next': None,
+                'previous': None,
+                'results':
+                    [
+                        {
+                            'id': self.product.id,
+                            'product_title': self.product.product_title,
+                            'product_model': self.product.product_model,
+                            'release_date': self.product.release_date,
+                            'price': self.product.price
+                        }
+                    ]
+            }
         )
 
     def test_product_create(self):
@@ -258,7 +280,6 @@ class ProductTestCase(APITestCase):
 class SupplierTestCase(APITestCase):
 
     def setUp(self):
-
         self.user = User.objects.create(
             email='testtest@test.ru',
             password='testtest'
@@ -283,7 +304,8 @@ class SupplierTestCase(APITestCase):
 
         self.supplier = Supplier.objects.create(
             name='Test supplier',
-            network_level=1,
+            network_type=0,
+            level=0,
             contact=self.contact,
             product=self.product,
             debt=0,
@@ -296,6 +318,8 @@ class SupplierTestCase(APITestCase):
         response = self.client.get(
             '/supplier/'
         )
+
+        # print(response.json())
 
         self.assertEquals(
             response.status_code,
@@ -321,29 +345,7 @@ class SupplierTestCase(APITestCase):
             '/supplier/',
             data={
                 'name': 'Test supplier',
-                'network_level': 1,
-                'contact': self.contact.pk,
-                'product': self.product.pk,
-                'debt': 0,
-                'creation_user': self.user.pk
-            }
-        )
-
-        # print(response.json())
-
-        self.assertEquals(
-            response.status_code,
-            status.HTTP_201_CREATED
-        )
-
-    def test_supplier_create_validate(self):
-        """Тестирование создания поставщика, когда валидация не проходит"""
-
-        response = self.client.post(
-            '/supplier/',
-            data={
-                'name': 'Test supplier',
-                'network_level': 0,
+                'network_type': 1,
                 'contact': self.contact.pk,
                 'product': self.product.pk,
                 'supplier_name': self.supplier.pk,
@@ -352,16 +354,11 @@ class SupplierTestCase(APITestCase):
             }
         )
 
-        # print(response.json())
+        print(response.json())
 
         self.assertEquals(
             response.status_code,
-            status.HTTP_400_BAD_REQUEST
-        )
-
-        self.assertEqual(
-            response.json(),
-            {'non_field_errors': ['У завода не может быть поставщика']}
+            status.HTTP_201_CREATED
         )
 
     def test_supplier_update(self):
@@ -392,3 +389,186 @@ class SupplierTestCase(APITestCase):
             response.status_code,
             status.HTTP_204_NO_CONTENT
         )
+
+    def test_supplier_create_validate_1(self):
+        """Тестирование создания поставщика, когда валидация не проходит"""
+
+        response = self.client.post(
+            '/supplier/',
+            data={
+                'name': 'Test supplier',
+                # 'level': 0,
+                'network_type': 0,
+                'contact': self.contact.pk,
+                'product': self.product.pk,
+                'supplier_name': self.supplier.pk,
+                'debt': 0,
+                'creation_user': self.user.pk
+            }
+        )
+
+        # print(response.json())
+
+        self.assertEquals(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST
+        )
+
+        self.assertEqual(
+            response.json(),
+            {'non_field_errors': ['У завода не может быть поставщика. '
+                                  'Выберете корректный тип сети или удалите поставщика']}
+        )
+
+    def test_supplier_create_validate_2(self):
+        """Тестирование создания поставщика, когда валидация не проходит"""
+
+        response = self.client.post(
+            '/supplier/',
+            data={
+                'name': 'Test supplier',
+                # 'level': 0,
+                # 'network_type': 0,
+                'contact': self.contact.pk,
+                'product': self.product.pk,
+                # 'supplier_name': self.supplier.pk,
+                'debt': 0,
+                'creation_user': self.user.pk
+            }
+        )
+
+        # print(response.json())
+
+        self.assertEquals(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST
+        )
+
+        self.assertEqual(
+            response.json(),
+            {'non_field_errors': ['Для создания поставщика укажите поставщика и тип сети. '
+                                  'Если вы являетесь заводом, укажите тип сети - 0']}
+        )
+
+    def test_supplier_create_validate_3(self):
+        """Тестирование создания поставщика, когда валидация не проходит"""
+
+        response = self.client.post(
+            '/supplier/',
+            data={
+                'name': 'Test supplier',
+                'level': 0,
+                'network_type': 1,
+                'contact': self.contact.pk,
+                'product': self.product.pk,
+                'supplier_name': self.supplier.pk,
+                'debt': 0,
+                'creation_user': self.user.pk
+            }
+        )
+
+        # print(response.json())
+
+        self.assertEquals(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST
+        )
+
+        self.assertEqual(
+            response.json(),
+            {'non_field_errors': ['Уровень поставщика должен быть на 1 выше уровня вашего поставщика. '
+                                  'Вы можете не выставлять уровень вручную, программа сделает это автоматически']}
+        )
+
+    def test_supplier_create_validate_4(self):
+        """Тестирование создания поставщика, когда валидация не проходит"""
+
+        response = self.client.post(
+            '/supplier/',
+            data={
+                'name': 'Test supplier',
+                # 'level': 0,
+                'network_type': 1,
+                'contact': self.contact.pk,
+                'product': self.product.pk,
+                # 'supplier_name': self.supplier.pk,
+                'debt': 0,
+                'creation_user': self.user.pk
+            }
+        )
+
+        # print(response.json())
+
+        self.assertEquals(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST
+        )
+
+        self.assertEqual(
+            response.json(),
+            {'non_field_errors': ['Для создания записи укажите вашего поставщика. '
+                                  'Если вы являетесь заводом, укажите тип сети - 0']}
+        )
+
+    def test_supplier_create_validate_5(self):
+        """Тестирование создания поставщика, когда валидация не проходит"""
+
+        response = self.client.post(
+            '/supplier/',
+            data={
+                'name': 'Test supplier',
+                'level': 1,
+                'network_type': 0,
+                'contact': self.contact.pk,
+                'product': self.product.pk,
+                # 'supplier_name': self.supplier.pk,
+                'debt': 0,
+                'creation_user': self.user.pk
+            }
+        )
+
+        # print(response.json())
+
+        self.assertEquals(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST
+        )
+
+        self.assertEqual(
+            response.json(),
+            {'non_field_errors': ['Вы выбрали тип сети завод - 0. '
+                                  'Если вы являетесь заводом, в цепочке поставок вы можете иметь только уровень - 0. '
+                                  'Для создания записи вы можете сделать следующее: '
+                                  '1. Не указывайте уровень и поставщика, либо укажите уровень в цепочке поставки - 0. '
+                                  '2. Если не вы являетесь заводом, укажите вашего поставщика и тип сети.']}
+        )
+
+    def test_supplier_create_validate_6(self):
+        """Тестирование создания поставщика, когда валидация не проходит"""
+
+        response = self.client.post(
+            '/supplier/',
+            data={
+                'name': 'Test supplier',
+                'level': 1,
+                # 'network_type': 0,
+                'contact': self.contact.pk,
+                'product': self.product.pk,
+                'supplier_name': self.supplier.pk,
+                'debt': 0,
+                'creation_user': self.user.pk
+            }
+        )
+
+        # print(response.json())
+
+        self.assertEquals(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST
+        )
+
+        self.assertEqual(
+            response.json(),
+            {'non_field_errors': ['Для создания поставщика укажите тип вашей сети.']}
+        )
+

@@ -71,7 +71,8 @@ class UserTestCase(APITestCase):
                     'id': self.user.id,
                     'first_name': self.user.first_name,
                     'last_name': self.user.last_name,
-                    'email': self.user.email
+                    'email': self.user.email,
+                    'is_active': self.user.is_active
                 }
             ]
         )
@@ -96,7 +97,8 @@ class UserTestCase(APITestCase):
                 'id': self.user.id,
                 'first_name': self.user.first_name,
                 'last_name': self.user.last_name,
-                'email': self.user.email
+                'email': self.user.email,
+                'is_active': self.user.is_active
             }
         )
 
