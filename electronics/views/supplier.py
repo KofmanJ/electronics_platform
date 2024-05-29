@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from electronics.models import Supplier
+from electronics.paginators import ElectronicsPagination
 from electronics.serializers.supplier import SupplierCreateSerializers, SupplierSerializers
 
 
@@ -16,6 +17,7 @@ class SupplierViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['contact__country']
     permission_classes = [IsAuthenticated]
+    pagination_class = ElectronicsPagination
 
     def perform_create(self, serializer):
         new_obj = serializer.save()
