@@ -1,4 +1,5 @@
-from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from electronics.models import Supplier
@@ -12,13 +13,17 @@ class SupplierViewSet(ModelViewSet):
         'create': SupplierCreateSerializers,
         'update': SupplierCreateSerializers,
     }
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['contact__country', ]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['contact__country']
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         new_obj = serializer.save()
         new_obj.creation_user = self.request.user
         new_obj.save()
+
+    # def perform_create(self, serializer):
+    #     new_obj = serializer.save(creation_user=self.request.user)
 
     def get_serializer_class(self):
         return self.serializers.get(self.action, self.default_serializer)
