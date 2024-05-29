@@ -18,25 +18,25 @@ class SupplierCreateSerializers(serializers.ModelSerializer):
                   'creation_time']
         validators = [SupplierValidator()]
 
-    def create(self, value):
+    def create(self, validated_data):
         request = self.context.get('request')
         if request and request.user:
-            value['creation_user'] = request.user
+            validated_data['creation_user'] = request.user
 
-        if value.get('supplier_name'):
-            supplier_name = value['supplier_name']
-            value['level'] = supplier_name.level + 1
-        elif value.get('network_type') == 0:
-            value['level'] = 0
+        if validated_data.get('supplier_name'):
+            supplier_name = validated_data['supplier_name']
+            validated_data['level'] = supplier_name.level + 1
+        elif validated_data.get('network_type') == 0:
+            validated_data['level'] = 0
 
-        return super().create(value)
+        return super().create(validated_data)
 
 
 class SupplierSerializers(serializers.ModelSerializer):
     """ Класс сериализатора поставщика """
 
-    contact = ContactsSerializers()
-    product = ProductSerializers()
+    contact = ContactsSerializers(read_only=True)
+    product = ProductSerializers(read_only=True)
     network_type = serializers.CharField(source='get_network_type_display')
 
     class Meta:
