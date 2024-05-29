@@ -5,7 +5,7 @@ from django.db import models
 
 NULLABLE = {'blank': True, 'null': True}
 
-network_level = [
+network_type = [
     (0, "Завод"),
     (1, "Розничная сеть"),
     (2, "Индивидуальный предприниматель"),
@@ -43,7 +43,8 @@ class Product(models.Model):
 
 class Supplier(models.Model):
     name = models.CharField(max_length=200, verbose_name='Название')
-    network_level = models.IntegerField(choices=network_level, verbose_name='Уровень сети', default=0)
+    network_type = models.IntegerField(choices=network_type, verbose_name='Тип сети', default=0)
+    level = models.PositiveIntegerField(verbose_name='Уровень поставки')
     contact = models.ForeignKey(Contacts, on_delete=models.CASCADE, verbose_name='Контакты')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
     supplier_name = models.ForeignKey('Supplier', on_delete=models.SET_NULL, verbose_name='Поставщик', **NULLABLE)
