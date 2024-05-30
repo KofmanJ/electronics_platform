@@ -5,6 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 from electronics.models import Supplier
 from electronics.paginators import ElectronicsPagination
 from electronics.serializers.supplier import SupplierCreateSerializers, SupplierSerializers
+from users.permissions import IsOwner, IsModerator, IsSuperUser
 
 
 class SupplierViewSet(ModelViewSet):
@@ -16,7 +17,7 @@ class SupplierViewSet(ModelViewSet):
     }
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['contact__country']
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     pagination_class = ElectronicsPagination
 
     def perform_create(self, serializer):
@@ -30,21 +31,20 @@ class SupplierViewSet(ModelViewSet):
     def get_serializer_class(self):
         return self.serializers.get(self.action, self.default_serializer)
 
-    # def get_permissions(self):
-    #     if self.action == 'create':
-    #         self.permission_classes = [IsAuthenticated, ~IsModerator]
-    #     elif self.action in ['list', 'retrieve', 'update', 'partial_update']:
-    #         self.permission_classes = [IsAuthenticated, IsModerator | IsOwner]
-    #     elif self.action == 'destroy':
-    #         self.permission_classes = [IsAuthenticated, IsOwner]
-    #     return [permission() for permission in self.permission_classes]
+    def get_queryset(self):
+        user = self.request.user
+        obj = super().get_queryset()
+        if user.groups.filter(name='moderator').exists() or user.is_superuser:
+            return obj
+        return obj.filter(creation_user=user)
+
     def get_permissions(self):
-        if self.action == ['create', 'list', 'retrieve']:
+        if self.action in ['create', 'list']:
             self.permission_classes = [IsAuthenticated]
-        elif self.action in ['update', 'partial_update']:
-            self.permission_classes = [IsAuthenticated, IsModerator | IsOwner]
+        elif self.action in ['update', 'partial_update', 'retrieve']:
+            self.permission_classes = [IsAuthenticated, IsOwner | IsModerator | IsSuperUser]
         elif self.action == 'destroy':
-            self.permission_classes = [IsAuthenticated, IsOwner]
+            self.permission_classes = [IsAuthenticated, IsSuperUser]
         return [permission() for permission in self.permission_classes]
 
 
