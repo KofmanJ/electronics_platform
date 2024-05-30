@@ -26,6 +26,7 @@ class Contacts(models.Model):
     class Meta:
         verbose_name = 'Контакт'
         verbose_name_plural = 'Контакты'
+        ordering = ['email']
 
 
 class Product(models.Model):
@@ -41,6 +42,7 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+        ordering = ['product_title']
 
 
 class Supplier(models.Model):
@@ -60,3 +62,4 @@ class Supplier(models.Model):
     class Meta:
         verbose_name = 'Поставщик'
         verbose_name_plural = 'Поставщики'
+        ordering = ['name']
