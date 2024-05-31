@@ -1,0 +1,146 @@
+[
+  {
+    "model": "electronics.contacts",
+    "pk": 13,
+    "fields": {
+      "email": "test@mail.ru",
+      "country": "Australia",
+      "city": "Sidney",
+      "street": null,
+      "house_number": null,
+      "creation_user": 17
+    }
+  },
+  {
+    "model": "electronics.contacts",
+    "pk": 14,
+    "fields": {
+      "email": "test1@ya.ru",
+      "country": "Russia",
+      "city": "Moscow",
+      "street": null,
+      "house_number": null,
+      "creation_user": 14
+    }
+  },
+  {
+    "model": "electronics.contacts",
+    "pk": 15,
+    "fields": {
+      "email": "test2@gmail.com",
+      "country": "USA",
+      "city": "New York",
+      "street": null,
+      "house_number": null,
+      "creation_user": 19
+    }
+  },
+  {
+    "model": "electronics.product",
+    "pk": 11,
+    "fields": {
+      "product_title": "Телевизор",
+      "product_model": "Xiaomi",
+      "release_date": "2022-10-15",
+      "price": 48000.0,
+      "creation_user": 14
+    }
+  },
+  {
+    "model": "electronics.product",
+    "pk": 12,
+    "fields": {
+      "product_title": "Мобильный телефон БУ",
+      "product_model": "Redmi",
+      "release_date": "2024-05-31",
+      "price": 14000.0,
+      "creation_user": 17
+    }
+  },
+  {
+    "model": "electronics.product",
+    "pk": 13,
+    "fields": {
+      "product_title": "Мобильный телефон",
+      "product_model": "iPhone",
+      "release_date": "2024-05-14",
+      "price": 87000.0,
+      "creation_user": 19
+    }
+  },
+  {
+    "model": "electronics.supplier",
+    "pk": 50,
+    "fields": {
+      "name": "Новые технологии",
+      "network_type": 0,
+      "level": 0,
+      "contact": 13,
+      "product": 11,
+      "supplier_name": null,
+      "debt": null,
+      "creation_time": "2024-05-31T20:04:21.616Z",
+      "creation_user": 17
+    }
+  },
+  {
+    "model": "electronics.supplier",
+    "pk": 51,
+    "fields": {
+      "name": "Авторские разработки",
+      "network_type": 1,
+      "level": 1,
+      "contact": 14,
+      "product": 11,
+      "supplier_name": 50,
+      "debt": 47000.0,
+      "creation_time": "2024-05-31T20:05:52.397Z",
+      "creation_user": 19
+    }
+  },
+  {
+    "model": "electronics.supplier",
+    "pk": 52,
+    "fields": {
+      "name": "ИП Новиков",
+      "network_type": 2,
+      "level": 2,
+      "contact": 15,
+      "product": 11,
+      "supplier_name": 51,
+      "debt": 48000.0,
+      "creation_time": "2024-05-31T20:07:06.422Z",
+      "creation_user": 14
+    }
+  },
+  {
+    "model": "electronics.supplier",
+    "pk": 53,
+    "fields": {
+      "name": "ООО 'ОНИН'",
+      "network_type": 0,
+      "level": 0,
+      "contact": 14,
+      "product": 12,
+      "supplier_name": null,
+      "debt": null,
+      "creation_time": "2024-05-31T20:08:28.215Z",
+      "creation_user": 13
+    }
+  },
+  {
+    "model": "electronics.supplier",
+    "pk": 54,
+    "fields": {
+      "name": "Авторские разработки",
+      "network_type": 2,
+      "level": 1,
+      "contact": 14,
+      "product": 12,
+      "supplier_name": 53,
+      "debt": 13000.5,
+      "creation_time": "2024-05-31T20:09:38.248Z",
+      "creation_user": 17
+    }
+  }
+]
