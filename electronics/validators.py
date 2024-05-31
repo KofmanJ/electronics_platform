@@ -52,3 +52,8 @@ class SupplierValidator:
             raise ValidationError('На нулевом уровне поставки может быть только завод. '
                                   'Если вы являетесь заводом, укажите тип сети - 0.'
                                   )
+
+        if value.get('network_type') != 0 and value.get('level') != 0 and value.get('supplier_name') is None:
+            raise ValidationError('Вы указали тип сети, не являющегося заводом. '
+                                  'Если вы не являетесь заводом, укажите вашего поставщика.'
+                                  )
