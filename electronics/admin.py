@@ -15,6 +15,7 @@ def set_null_debt(ModelAdmin, request, queryset):
 class ContactsAdmin(admin.ModelAdmin):
     """ Админка контактов """
     list_display = ('id', 'email', 'country', 'city', 'street', 'house_number', 'creation_user')
+    list_filter = ('country', 'city')
 
 
 @admin.register(Product)
