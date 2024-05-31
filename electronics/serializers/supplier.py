@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from electronics.models import Supplier
 from electronics.serializers.contacts import ContactsSerializers
@@ -42,3 +41,15 @@ class SupplierSerializers(serializers.ModelSerializer):
     class Meta:
         model = Supplier
         fields = '__all__'
+        read_only_fields = ('debt', 'creation_time', 'creation_user', )
+
+    def validate(self, data):
+        print(data)
+        request = self.context.get('request')
+        if not request.user.is_superuser:
+            if self.instance and any(field in data for field in ["level", "get_network_type_display", "supplier_name"]):
+                raise serializers.ValidationError(
+                    "Обновление данных полей запрещено. "
+                    "Обратитесь к администратору сайта, если вам необходимо изменить данные.")
+
+        return data
