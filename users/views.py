@@ -23,9 +23,6 @@ class UserUpdateAPIView(UpdateAPIView):
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated, IsUserOwner | IsModerator | IsSuperUser]
 
-    # def get_object(self):
-    #     return self.request.user
-
 
 class UserListAPIView(ListAPIView):
     """Класс для получения списка пользователей"""
@@ -49,7 +46,3 @@ class UserDestroyAPIView(DestroyAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated, IsUserOwner | IsSuperUser]
-
-    # def get_object(self):
-    #     user_id = self.kwargs['pk']  # Получаем переданный id из URL
-    #     return get_object_or_404(self.queryset, id=user_id)
