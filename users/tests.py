@@ -8,6 +8,8 @@ from users.models import User
 class UserTestCase(APITestCase):
 
     def setUp(self):
+        """Подготовка данных для тестирования"""
+
         self.user = User.objects.create(
             first_name='user',
             last_name='user',

@@ -6,6 +6,7 @@ from users.models import User
 
 
 class ContactTestCase(APITestCase):
+    """ Тестирование контактов """
 
     def setUp(self):
         """Подготовка данных для тестирования"""
