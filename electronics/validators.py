@@ -58,7 +58,7 @@ class SupplierValidator:
                                   'Если вы не являетесь заводом, укажите вашего поставщика.'
                                   )
 
-        if value.get('network_type') == 0 and value.get('debt') != 0:
+        if value.get('network_type') == 0 and value.get('debt') is not None:
             raise ValidationError('У завода не может быть задолженности. '
                                   'Если вы являетесь заводом, оставьте поле задолженности пустым.'
                                   )
