@@ -2,6 +2,8 @@ from rest_framework.permissions import BasePermission
 
 
 class IsModerator(BasePermission):
+    """Права доступа для модератора"""
+
     message = "Вы не являетесь модератором"
 
     def has_permission(self, request, view):
@@ -9,6 +11,8 @@ class IsModerator(BasePermission):
 
 
 class IsOwner(BasePermission):
+    """Права доступа для владельца объекта"""
+
     message = "Вы не владелец данного объекта"
 
     def has_object_permission(self, request, view, obj):
@@ -18,6 +22,8 @@ class IsOwner(BasePermission):
 
 
 class IsSuperUser(BasePermission):
+    """Права доступа для администратора"""
+
     message = "Вы не являетесь администратором"
 
     def has_permission(self, request, view):
@@ -26,6 +32,7 @@ class IsSuperUser(BasePermission):
 
 class IsUserOwner(BasePermission):
     """Права доступа для пользователя"""
+
     message = "Вы не являетесь владельцем этой учетной записи"
 
     def has_object_permission(self, request, view, obj):
