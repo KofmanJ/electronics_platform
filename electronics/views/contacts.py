@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -12,6 +13,8 @@ class ContactsViewSet(ModelViewSet):
     serializer_class = ContactsSerializers
     queryset = Contacts.objects.all()
     pagination_class = ElectronicsPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['country']
 
     def perform_create(self, serializer):
         new_obj = serializer.save()
