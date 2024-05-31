@@ -8,6 +8,7 @@ from users.permissions import IsOwner, IsModerator, IsSuperUser
 
 
 class ContactsViewSet(ModelViewSet):
+    """ Представление для работы с контактами """
     serializer_class = ContactsSerializers
     queryset = Contacts.objects.all()
     pagination_class = ElectronicsPagination

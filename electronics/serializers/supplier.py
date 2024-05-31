@@ -7,7 +7,7 @@ from electronics.validators import SupplierValidator
 
 
 class SupplierCreateSerializers(serializers.ModelSerializer):
-    """ Класс сериализатора cоздания поставщика """
+    """ Класс сериализатора для cоздания поставщика """
 
     level = serializers.IntegerField(required=False)  # Делаем поле level необязательным
 
@@ -18,6 +18,7 @@ class SupplierCreateSerializers(serializers.ModelSerializer):
         validators = [SupplierValidator()]
 
     def create(self, validated_data):
+        """ Метод создания поставщика """
         request = self.context.get('request')
         if request and request.user:
             validated_data['creation_user'] = request.user
@@ -44,6 +45,7 @@ class SupplierSerializers(serializers.ModelSerializer):
         read_only_fields = ('debt', 'creation_time', 'creation_user', )
 
     def validate(self, data):
+        """ Метод валидации поставщика """
         print(data)
         request = self.context.get('request')
         if not request.user.is_superuser:

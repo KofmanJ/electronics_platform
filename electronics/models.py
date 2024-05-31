@@ -13,6 +13,8 @@ network_type = [
 
 
 class Contacts(models.Model):
+    """ Класс модели контактов """
+
     email = models.EmailField(verbose_name='Электронная почта')
     country = models.CharField(max_length=100, verbose_name='Страна', **NULLABLE)
     city = models.CharField(max_length=100, verbose_name='Город', **NULLABLE)
@@ -30,6 +32,8 @@ class Contacts(models.Model):
 
 
 class Product(models.Model):
+    """ Класс модели продукта """
+
     product_title = models.CharField(max_length=200, verbose_name='Название продукта')
     product_model = models.CharField(max_length=100, verbose_name='Модель')
     release_date = models.DateField(verbose_name='Дата выхода', **NULLABLE)
@@ -46,6 +50,8 @@ class Product(models.Model):
 
 
 class Supplier(models.Model):
+    """ Класс модели поставщиков """
+
     name = models.CharField(max_length=200, verbose_name='Название')
     network_type = models.IntegerField(choices=network_type, verbose_name='Тип сети', default=0)
     level = models.PositiveIntegerField(verbose_name='Уровень поставки')

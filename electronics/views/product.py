@@ -8,6 +8,7 @@ from users.permissions import IsOwner, IsModerator, IsSuperUser
 
 
 class ProductViewSet(ModelViewSet):
+    """ Представление для работы с продуктами """
     serializer_class = ProductSerializers
     queryset = Product.objects.all()
     pagination_class = ElectronicsPagination

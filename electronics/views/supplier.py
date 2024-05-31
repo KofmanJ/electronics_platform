@@ -9,6 +9,7 @@ from users.permissions import IsOwner, IsModerator, IsSuperUser
 
 
 class SupplierViewSet(ModelViewSet):
+    """ Представление для работы с поставщиками """
     default_serializer = SupplierSerializers
     queryset = Supplier.objects.all()
     serializers = {
