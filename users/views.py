@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, DestroyAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
@@ -54,11 +53,3 @@ class UserDestroyAPIView(DestroyAPIView):
     # def get_object(self):
     #     user_id = self.kwargs['pk']  # Получаем переданный id из URL
     #     return get_object_or_404(self.queryset, id=user_id)
-
-
-
-
-
-
-
-
