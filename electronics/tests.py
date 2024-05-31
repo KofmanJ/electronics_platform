@@ -461,7 +461,7 @@ class SupplierTestCase(APITestCase):
         self.assertEqual(
             response.json(),
             {'non_field_errors': ['У завода не может быть поставщика. '
-                                  'Выберете корректный тип сети или удалите поставщика']}
+                                  'Выберете корректный тип сети или удалите поставщика.']}
         )
 
     def test_supplier_create_validate_2(self):
@@ -493,7 +493,7 @@ class SupplierTestCase(APITestCase):
         self.assertEqual(
             response.json(),
             {'non_field_errors': ['Для создания поставщика укажите поставщика и тип сети. '
-                                  'Если вы являетесь заводом, укажите тип сети - 0']}
+                                  'Если вы являетесь заводом, укажите тип сети - 0.']}
         )
 
     def test_supplier_create_validate_3(self):
@@ -524,8 +524,8 @@ class SupplierTestCase(APITestCase):
 
         self.assertEqual(
             response.json(),
-            {'non_field_errors': ['Уровень поставщика должен быть на 1 выше уровня вашего поставщика. '
-                                  'Вы можете не выставлять уровень вручную, программа сделает это автоматически']}
+            {'non_field_errors': ['На нулевом уровне поставки может находиться только завод. '
+                                  'Выберете корректный тип сети или удалите поставщика.']}
         )
 
     def test_supplier_create_validate_4(self):
@@ -557,7 +557,7 @@ class SupplierTestCase(APITestCase):
         self.assertEqual(
             response.json(),
             {'non_field_errors': ['Для создания записи укажите вашего поставщика. '
-                                  'Если вы являетесь заводом, укажите тип сети - 0']}
+                                  'Если вы являетесь заводом, укажите тип сети - 0.']}
         )
 
     def test_supplier_create_validate_5(self):
