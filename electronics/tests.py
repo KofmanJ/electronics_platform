@@ -625,3 +625,35 @@ class SupplierTestCase(APITestCase):
             response.json(),
             {'non_field_errors': ['Для создания поставщика укажите тип вашей сети.']}
         )
+
+    def test_supplier_create_validate_7(self):
+        """Тестирование создания поставщика, когда валидация не проходит"""
+
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.post(
+            '/supplier/',
+            data={
+                'name': 'Test supplier',
+                'level': 0,
+                'network_type': 1,
+                'contact': self.contact.pk,
+                'product': self.product.pk,
+                'supplier_name': self.supplier.pk,
+                'debt': 0,
+                'creation_user': self.user.pk
+            }
+        )
+
+        # print(response.json())
+
+        self.assertEquals(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST
+        )
+
+        self.assertEqual(
+            response.json(),
+            {'non_field_errors': ['На нулевом уровне поставки может находиться только завод. '
+                                  'Выберете корректный тип сети или удалите поставщика.']}
+        )
