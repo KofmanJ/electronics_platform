@@ -8,6 +8,8 @@ from users.models import User
 class ContactTestCase(APITestCase):
 
     def setUp(self):
+        """Подготовка данных для тестирования"""
+
         self.user = User.objects.create(
             email='testtest@test.ru',
             password='testtest'
@@ -20,13 +22,12 @@ class ContactTestCase(APITestCase):
             country='Russia',
             city='Moscow',
             street='',
-            house_number=''
+            house_number='',
+            creation_user=self.user
         )
 
     def test_contact_list(self):
         """Тестирование получения списка контактов"""
-
-        # self.client.force_authenticate(user=self.user)
 
         response = self.client.get(
             '/contact/'
@@ -54,6 +55,7 @@ class ContactTestCase(APITestCase):
                             'city': self.contact.city,
                             'street': self.contact.street,
                             'house_number': self.contact.house_number,
+                            'creation_user': self.user.id
                         }
                     ]
             }
@@ -61,8 +63,6 @@ class ContactTestCase(APITestCase):
 
     def test_contact_retrieve(self):
         """Тестирование получения контакта"""
-
-        # self.client.force_authenticate(user=self.user)
 
         response = self.client.get(
             '/contact/', kwargs={'pk': self.contact.pk}
@@ -90,6 +90,7 @@ class ContactTestCase(APITestCase):
                             'city': self.contact.city,
                             'street': self.contact.street,
                             'house_number': self.contact.house_number,
+                            'creation_user': self.user.id
                         }
                     ]
             }
@@ -106,6 +107,7 @@ class ContactTestCase(APITestCase):
                 'city': 'New York',
                 'street': '',
                 'house_number': '',
+                'creation_user': self.user.id
             }
         )
 
@@ -149,6 +151,8 @@ class ContactTestCase(APITestCase):
 class ProductTestCase(APITestCase):
 
     def setUp(self):
+        """Подготовка данных для тестирования"""
+
         self.user = User.objects.create(
             email='testtest@test.ru',
             password='testtest'
@@ -160,7 +164,8 @@ class ProductTestCase(APITestCase):
             product_title='Машина тестомесильная',
             product_model='GRTE-123',
             release_date='2020-01-01',
-            price=1000
+            price=1000,
+            creation_user=self.user
         )
 
     def test_product_list(self):
@@ -190,7 +195,8 @@ class ProductTestCase(APITestCase):
                             'product_title': self.product.product_title,
                             'product_model': self.product.product_model,
                             'release_date': self.product.release_date,
-                            'price': self.product.price
+                            'price': self.product.price,
+                            'creation_user': self.user.id
                         }
                     ]
             }
@@ -223,7 +229,8 @@ class ProductTestCase(APITestCase):
                             'product_title': self.product.product_title,
                             'product_model': self.product.product_model,
                             'release_date': self.product.release_date,
-                            'price': self.product.price
+                            'price': self.product.price,
+                            'creation_user': self.user.id
                         }
                     ]
             }
@@ -238,7 +245,8 @@ class ProductTestCase(APITestCase):
                 'product_title': 'Машина отсадочная',
                 'product_model': 'FBK-9000',
                 'release_date': '2023-11-01',
-                'price': 12500
+                'price': 12500,
+                'creation_user': self.user.id
             }
         )
 
@@ -280,26 +288,36 @@ class ProductTestCase(APITestCase):
 class SupplierTestCase(APITestCase):
 
     def setUp(self):
+        """Подготовка данных для тестирования"""
+
         self.user = User.objects.create(
             email='testtest@test.ru',
             password='testtest'
         )
 
-        self.client.force_authenticate(user=self.user)
+        self.user_admin = User.objects.create(
+            email='admin@test.ru',
+            password='adminadmin',
+            is_superuser=True
+        )
+
+        # self.client.force_authenticate(user=self.user)
 
         self.contact = Contacts.objects.create(
             email='testtest@test.ru',
             country='Russia',
             city='Moscow',
             street='',
-            house_number=''
+            house_number='',
+            creation_user=self.user
         )
 
         self.product = Product.objects.create(
             product_title='Машина тестомесильная',
             product_model='GRTE-123',
             release_date='2020-01-01',
-            price=1000
+            price=1000,
+            creation_user=self.user
         )
 
         self.supplier = Supplier.objects.create(
@@ -315,6 +333,8 @@ class SupplierTestCase(APITestCase):
     def test_supplier_list(self):
         """Тестирование получения списка поставщиков"""
 
+        self.client.force_authenticate(user=self.user)
+
         response = self.client.get(
             '/supplier/'
         )
@@ -329,6 +349,8 @@ class SupplierTestCase(APITestCase):
     def test_supplier_retrieve(self):
         """Тестирование получения поставщика"""
 
+        self.client.force_authenticate(user=self.user)
+
         response = self.client.get(
             '/supplier/', kwargs={'pk': self.supplier.pk}
         )
@@ -340,6 +362,8 @@ class SupplierTestCase(APITestCase):
 
     def test_supplier_create(self):
         """Тестирование создания поставщика"""
+
+        self.client.force_authenticate(user=self.user)
 
         response = self.client.post(
             '/supplier/',
@@ -354,7 +378,7 @@ class SupplierTestCase(APITestCase):
             }
         )
 
-        print(response.json())
+        # print(response.json())
 
         self.assertEquals(
             response.status_code,
@@ -363,6 +387,8 @@ class SupplierTestCase(APITestCase):
 
     def test_supplier_update(self):
         """Тестирование обновления поставщика"""
+
+        self.client.force_authenticate(user=self.user)
 
         updated_data = {
             'name': 'Test suppliers',
@@ -379,7 +405,23 @@ class SupplierTestCase(APITestCase):
         )
 
     def test_supplier_delete(self):
-        """Тестирование удаления поставщика"""
+        """Тестирование удаления поставщика админом"""
+
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.delete(
+            f'/supplier/{self.supplier.pk}/'
+        )
+
+        self.assertEquals(
+            response.status_code,
+            status.HTTP_403_FORBIDDEN
+        )
+
+    def test_supplier_delete_admin(self):
+        """Тестирование удаления поставщика админом"""
+
+        self.client.force_authenticate(user=self.user_admin)
 
         response = self.client.delete(
             f'/supplier/{self.supplier.pk}/'
@@ -392,6 +434,8 @@ class SupplierTestCase(APITestCase):
 
     def test_supplier_create_validate_1(self):
         """Тестирование создания поставщика, когда валидация не проходит"""
+
+        self.client.force_authenticate(user=self.user)
 
         response = self.client.post(
             '/supplier/',
@@ -423,6 +467,8 @@ class SupplierTestCase(APITestCase):
     def test_supplier_create_validate_2(self):
         """Тестирование создания поставщика, когда валидация не проходит"""
 
+        self.client.force_authenticate(user=self.user)
+
         response = self.client.post(
             '/supplier/',
             data={
@@ -452,6 +498,8 @@ class SupplierTestCase(APITestCase):
 
     def test_supplier_create_validate_3(self):
         """Тестирование создания поставщика, когда валидация не проходит"""
+
+        self.client.force_authenticate(user=self.user)
 
         response = self.client.post(
             '/supplier/',
@@ -483,6 +531,8 @@ class SupplierTestCase(APITestCase):
     def test_supplier_create_validate_4(self):
         """Тестирование создания поставщика, когда валидация не проходит"""
 
+        self.client.force_authenticate(user=self.user)
+
         response = self.client.post(
             '/supplier/',
             data={
@@ -512,6 +562,8 @@ class SupplierTestCase(APITestCase):
 
     def test_supplier_create_validate_5(self):
         """Тестирование создания поставщика, когда валидация не проходит"""
+
+        self.client.force_authenticate(user=self.user)
 
         response = self.client.post(
             '/supplier/',
@@ -546,6 +598,8 @@ class SupplierTestCase(APITestCase):
     def test_supplier_create_validate_6(self):
         """Тестирование создания поставщика, когда валидация не проходит"""
 
+        self.client.force_authenticate(user=self.user)
+
         response = self.client.post(
             '/supplier/',
             data={
@@ -571,4 +625,3 @@ class SupplierTestCase(APITestCase):
             response.json(),
             {'non_field_errors': ['Для создания поставщика укажите тип вашей сети.']}
         )
-
