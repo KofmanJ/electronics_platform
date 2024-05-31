@@ -13,20 +13,15 @@ class SupplierViewSet(ModelViewSet):
     queryset = Supplier.objects.all()
     serializers = {
         'create': SupplierCreateSerializers,
-        'update': SupplierCreateSerializers,
     }
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['contact__country']
-    # permission_classes = [IsAuthenticated]
     pagination_class = ElectronicsPagination
 
     def perform_create(self, serializer):
         new_obj = serializer.save()
         new_obj.creation_user = self.request.user
         new_obj.save()
-
-    # def perform_create(self, serializer):
-    #     new_obj = serializer.save(creation_user=self.request.user)
 
     def get_serializer_class(self):
         return self.serializers.get(self.action, self.default_serializer)
@@ -46,7 +41,3 @@ class SupplierViewSet(ModelViewSet):
         elif self.action == 'destroy':
             self.permission_classes = [IsAuthenticated, IsSuperUser]
         return [permission() for permission in self.permission_classes]
-
-
-
-
