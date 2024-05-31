@@ -2,7 +2,7 @@ from rest_framework.exceptions import ValidationError
 
 
 class SupplierValidator:
-    """Проверяет наличие у завода поставщика"""
+    """Проверка валидации поставщика"""
 
     def __call__(self, value):
         if value.get('network_type') == 0 and value.get('supplier_name'):
